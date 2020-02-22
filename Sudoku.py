@@ -51,6 +51,8 @@ cols = [group(0,1,x,y,"column") for x in range(3) for y in range(3)]
 rows = [group(2,3,x,y,"row") for x in range(3) for y in range(3)]
 sqrs = [group(1,3,x,y,"square") for x in range(3) for y in range(3)]
 groups = sqrs+rows+cols
+bands = [(sqrs[i].mask|sqrs[j].mask|sqrs[k].mask) for i,j,k in\
+         [(0,1,2),(3,4,5),(6,7,8),(0,3,6),(1,4,7),(2,5,8)]]
 
 neighbors = [0]*81
 for i in range(81):
@@ -1538,6 +1540,9 @@ parser.add_option("-g","--generate", dest="generate", action="store_true",
 parser.add_option("-a", "--asymmetric", dest="asymmetric", action="store_true",
                   help = "allow asymmetry in generated puzzles")
 
+parser.add_option("-d", "--diverse", dest="diverse", action="store_true",
+                  help = "seek diverse cell values in generated puzzles")
+
 parser.add_option("-u", "--unique", dest="assume_unique", action="store_false",
                   help = "disallow rules that assume a unique solution",
                   default = True)
@@ -1620,8 +1625,18 @@ def random_puzzle(generate_symmetric = True):
     while True:
         try:
             while not grid.complete():
-                d,c = random.choice([(d,c) for c in range(81)
-                                           for d in choices(c)])
+                allchoices = []
+                if options.diverse:
+                    used = [0 for d in range(10)]
+                    for d,c in puzzle:
+                        for b in bands:
+                            if (1<<c)&b:
+                                used[d] |= b
+                    allchoices = [(d,c) for c in range(81) for d in choices(c) \
+                                  if used[d] & (1<<c) == 0]
+                if not allchoices:
+                    allchoices = [(d,c) for c in range(81) for d in choices(c)]
+                d,c = random.choice(allchoices)
                 grid.place(d,c)
                 while step(grid,True): pass
                 puzzle.append((d,c))
