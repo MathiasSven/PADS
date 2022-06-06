@@ -34,26 +34,18 @@ generated permutation of O(1). The other generators are similar.
 
 import unittest
 
-# 2to3 compatibility
-try:
-    xrange
-except:
-    xrange = range
-
 def PlainChanges(n):
     """Generate the swaps for the Steinhaus-Johnson-Trotter algorithm."""
     if n < 1:
         return
-    up = xrange(n-1)
-    down = xrange(n-2,-1,-1)
+    up = range(n-1)
+    down = range(n-2,-1,-1)
     recur = PlainChanges(n-1)
     try:
         while True:
-            for x in down:
-                yield x
+            yield from down
             yield next(recur) + 1
-            for x in up:
-                yield x
+            yield from up
             yield next(recur)
     except StopIteration:
         pass
@@ -80,16 +72,14 @@ def DoublePlainChanges(n):
     """Generate the swaps for double permutations."""
     if n < 1:
         return
-    up = xrange(1,2*n-1)
-    down = xrange(2*n-2,0,-1)
+    up = range(1,2*n-1)
+    down = range(2*n-2,0,-1)
     recur = DoublePlainChanges(n-1)
     try:
         while True:
-            for x in up:
-                yield x
+            yield from up
             yield next(recur) + 1
-            for x in down:
-                yield x
+            yield from down
             yield next(recur) + 2
     except StopIteration:
         pass
@@ -117,16 +107,14 @@ def StirlingChanges(n):
     in swapping items two positions apart instead of adjacent items."""
     if n <= 1:
         return
-    up = xrange(2*n-2)
-    down = xrange(2*n-3,-1,-1)
+    up = range(2*n-2)
+    down = range(2*n-3,-1,-1)
     recur = StirlingChanges(n-1)
     try:
         while True:
-            for x in down:
-                yield x
+            yield from down
             yield next(recur) + 2
-            for x in up:
-                yield x
+            yield from up
             yield next(recur)
     except StopIteration:
         pass
@@ -165,11 +153,9 @@ def InvolutionChanges(n):
     try:
         while True:
             yield next(ic) + 1
-            for i in up:
-                yield i
+            yield from up
             yield next(ic)
-            for i in down:
-                yield i
+            yield from down
     except StopIteration:
         yield n-4
 
