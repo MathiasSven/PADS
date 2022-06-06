@@ -2,7 +2,7 @@
 Algorithms on strings and sequences based on Lyndon words.
 David Eppstein, October 2011."""
 
-import unittest
+import unittest,itertools
 from Eratosthenes import MoebiusFunction
 
 def LengthLimitedLyndonWords(s,n):
@@ -34,11 +34,8 @@ def LyndonWordsWithLength(s,n):
 def LyndonWords(s):
     """Generate all Lyndon words over an s-symbol alphabet.
     The generation order is by length, then lexicographic within each length."""
-    n = 0
-    while True:
-        for w in LyndonWordsWithLength(s,n):
-            yield w
-        n += 1
+    for n in itertools.count():
+        yield from LyndonWordsWithLength(s,n)
 
 def DeBruijnSequence(s,n):
     """Generate a De Bruijn sequence for words of length n over s symbols
