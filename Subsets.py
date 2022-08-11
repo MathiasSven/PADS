@@ -13,7 +13,7 @@ def subsets(S):
     """All subsets of sequence S."""
     S = iter(S)
     try:
-        x = S.next()
+        x = next(S)
     except StopIteration:
         yield set()
         return
