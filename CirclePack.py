@@ -82,7 +82,7 @@ def NormalizePacking(packing,k=None,target=1.0):
     else:
         z,r = packing[k]
     s = target/r
-    return dict((kk,(zz*s,rr*s)) for kk,(zz,rr) in packing.iteritems())
+    return dict((kk,(zz*s,rr*s)) for kk,(zz,rr) in packing.items())
 
 def InvertAround(packing,k,smallCircles=None):
     """Invert so that the specified circle surrounds all the others.
