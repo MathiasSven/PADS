@@ -125,6 +125,27 @@ class SVG:
         self.element('polyline points="%s"' % pointlist,
                      style=style, **morestyle)
 
+    def polycurve(self, points, style={}, **morestyle):
+        """Smooth curve through given set of points, excepting first and last.
+        The first and last points are used only to determine control points
+        to make the curve pass smoothly through the other points.
+        Repeat two more points to make a smooth closed curve."""
+        data = ["M"]
+        smoothing=1.172 # tuned for good fit to four-point circle
+        def _point(q):
+            data.append(_coord(q.real))
+            data.append(_coord(q.imag))
+        _point(points[1])
+        data.append("C")
+        for i in range(1,len(points)-2):
+            a,b,c,d = points[i-1], points[i], points[i+1], points[i+2]
+            x,y,z = abs(b-a),abs(c-b),abs(d-c)
+            t = x+y+z
+            _point(b + smoothing*(c-a)*x*y/(t*abs(c-a)))
+            _point(c - smoothing*(d-b)*z*y/(t*abs(d-b)))
+            _point(c)
+        self.element('path d="%s"' % ' '.join(data), style=style, **morestyle)
+
     def segment(self, p, q, style={}, **morestyle):
         """Line segment from p to q"""
         self.element('line x1="%s" y1="%s" x2="%s" y2="%s"' % 
