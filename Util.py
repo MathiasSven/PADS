@@ -29,15 +29,19 @@ def map_to_constant(constant):
 
 def merge(*streams):
     """
-    Merge given streams in numerical order
+    Merge given streams in sorted order
     """
-    heads = [(next(s),s) for s in streams]
-    heads.sort()
-    while heads:
-        item,stream = heapq.heappop(heads)
-        yield item
+    heads = []
+    def pushstream(s):
         try:
-            another = next(stream)
-            heapq.heappush(heads,(another,stream))
+            x = next(s)
+            heapq.heappush(heads,(x,s))
         except StopIteration:
             pass
+    heads = []
+    for s in streams:
+        pushstream(iter(s))
+    while heads:
+        x,s = heapq.heappop(heads)
+        yield x
+        pushstream(s)
