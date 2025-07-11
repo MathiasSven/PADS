@@ -4,6 +4,8 @@ Simple utility functions for PADS library.
 D. Eppstein, April 2004.
 """
 
+import heapq
+
 def arbitrary_item(S):
     """
     Select an arbitrary item from set or sequence S.
@@ -25,16 +27,17 @@ def map_to_constant(constant):
         return dict.fromkeys(seq,constant)
     return factory
 
-def merge(s,t):
+def merge(*streams):
     """
-    Merge streams s and t in sorted order.
+    Merge given streams in numerical order
     """
-    ss = next(s)
-    tt = next(t)
-    while True:
-        if ss < tt:
-            yield ss
-            ss = next(s)
-        else:
-            yield tt
-            tt = next(t)
+    heads = [(next(s),s) for s in streams]
+    heads.sort()
+    while heads:
+        item,stream = heapq.heappop(heads)
+        yield item
+        try:
+            another = next(stream)
+            heapq.heappush(heads,(another,stream))
+        except StopIteration:
+            pass
