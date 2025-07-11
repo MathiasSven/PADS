@@ -125,9 +125,7 @@ def isPracticalFactorization(f):
 
 def PracticalNumbers():
     """Generate the sequence of practical (or panarithmic) numbers."""
-    for x,f in FactoredIntegers():
-        if isPracticalFactorization(f):
-            yield x
+    yield from (x for x,f in FactoredIntegers() if isPracticalFactorization(f))
 
 def FermiDirac():
     """Sequence of p**(2**k) where p is a prime number, OEIS A050376.
