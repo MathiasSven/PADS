@@ -24,3 +24,17 @@ def map_to_constant(constant):
     def factory(seq):
         return dict.fromkeys(seq,constant)
     return factory
+
+def merge(s,t):
+    """
+    Merge streams s and t in sorted order.
+    """
+    ss = next(s)
+    tt = next(t)
+    while True:
+        if ss < tt:
+            yield ss
+            ss = next(s)
+        else:
+            yield tt
+            tt = next(t)

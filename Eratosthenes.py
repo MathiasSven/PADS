@@ -29,6 +29,7 @@ variant in the generation of practical numbers.
 
 import unittest
 from collections import defaultdict
+from Util import merge
 
 def primes():
     '''Yields the sequence of primes via the Sieve of Eratosthenes.'''
@@ -132,18 +133,9 @@ def FermiDirac():
     """Sequence of p**(2**k) where p is a prime number, OEIS A050376.
     The algorithm merges the sequence of primes with the squares of its output.
     The higher powers are so sparse that the time is dominated by the primes."""
-    pi = primes()
-    yield next(pi)
-    p = next(pi)
-    si = FermiDirac()
-    s = next(si)**2
-    while True:
-        if p < s:
-            yield p
-            p = next(pi)
-        else:
-            yield s
-            s = next(si)**2
+    p = primes()
+    yield next(p)
+    yield from merge(p,(f**2 for f in FermiDirac()))
 
 # If run standalone, perform unit tests
 class SieveTest(unittest.TestCase):    
