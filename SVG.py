@@ -129,21 +129,46 @@ class SVG:
         """Smooth curve through given set of points, excepting first and last.
         The first and last points are used only to determine control points
         to make the curve pass smoothly through the other points.
-        Repeat two more points to make a smooth closed curve."""
+        Repeat the first three points to make a smooth closed curve.
+        
+        Uses strain-optimal Hermite interpolation from Yong & Cheng, CAGD 2004,
+        https://www.cs.uky.edu/%7Echeng/PUBL/Paper-Geometric-Hermite.pdf"""
+
+        def straincontrol(q0,p0,p1,q1):
+            """Spline through q and r with directions controlled by q1 and q2
+            Results returned as four Bezier control points"""
+            # get initial direction vectors
+            v0 = p1-q0
+            v1 = q1-p0
+            
+            # formula from Yong & Cheng Theorem 2 (t0=0 t1=1)
+            def dot(r,s):
+                return r.real*s.real + r.imag*s.imag
+            d = 3*(p1-p0)
+            dv0 = dot(d,v0)
+            dv1 = dot(d,v1)
+            v00 = dot(v0,v0)
+            v01 = dot(v0,v1)
+            v11 = dot(v1,v1)
+            e = 4*v00*v11-v01**2
+            a0 = (2*dv0*v11-dv1*v01)/e
+            a1 = (2*dv1*v00-dv0*v01)/e
+
+            # convert to Bezier form
+            return p0,p0+a0*v0/3,p1-a1*v1/3,p1
+
         data = ["M"]
-        smoothing=1.172 # tuned for good fit to four-point circle
         def _point(q):
             data.append(_coord(q.real))
             data.append(_coord(q.imag))
         _point(points[1])
         data.append("C")
         for i in range(1,len(points)-2):
-            a,b,c,d = points[i-1], points[i], points[i+1], points[i+2]
-            x,y,z = abs(b-a),abs(c-b),abs(d-c)
-            t = x+y+z
-            _point(b + smoothing*(c-a)*x*y/(t*abs(c-a)))
-            _point(c - smoothing*(d-b)*z*y/(t*abs(d-b)))
+            a,b,c,d = straincontrol(points[i-1], points[i],
+                                    points[i+1], points[i+2])
+            _point(b)
             _point(c)
+            _point(d)
         self.element('path d="%s"' % ' '.join(data), style=style, **morestyle)
 
     def segment(self, p, q, style={}, **morestyle):
