@@ -135,7 +135,7 @@ class SVG:
         https://www.cs.uky.edu/%7Echeng/PUBL/Paper-Geometric-Hermite.pdf"""
 
         def straincontrol(q0,p0,p1,q1):
-            """Spline through q and r with directions controlled by q1 and q2
+            """Spline through p0 and p1 with directions controlled by q0 and q1
             Results returned as four Bezier control points"""
             # get initial direction vectors
             v0 = p1-q0
