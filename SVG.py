@@ -110,7 +110,7 @@ class SVG:
         width = abs((p-q).real)
         height = abs((p-q).imag)
         self.element('rect x="%s" y="%s" width="%s" height="%s"' %
-                (_coord(x), _coord(x), _coord(width), _coord(height)),
+                (_coord(x), _coord(y), _coord(width), _coord(height)),
             style=style, **morestyle)
 
     def polygon(self, points, style={}, **morestyle):
