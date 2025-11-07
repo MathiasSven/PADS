@@ -1,0 +1,25 @@
+name: "Subtree Sync"
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  '0 16 */1 * *'
+
+jobs:
+  sync-subtree:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - uses: gotmax23/set-bot-git-user-action@main
+
+      - name: Pull subtree
+        run: git subtree pull --prefix=PADS https://ics.uci.edu/~eppstein/PADS/.git/ master
+
+      - run: git push
