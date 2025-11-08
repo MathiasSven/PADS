@@ -1,0 +1,1 @@
+[![Subtree Sync](https://github.com/MathiasSven/PADS/actions/workflows/subtree-sync.yml/badge.svg)](https://github.com/MathiasSven/PADS/actions/workflows/subtree-sync.yml) [![Test Build](https://github.com/MathiasSven/PADS/actions/workflows/test-build.yml/badge.svg?branch=master)](https://github.com/MathiasSven/PADS/actions/workflows/test-build.yml)
