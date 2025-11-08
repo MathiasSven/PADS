@@ -1,0 +1,28 @@
+name: "Test Build"
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'PADS/**'
+
+jobs:
+  test-build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v10
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - run: nix-build -E "(import <nixpkgs> {}).callPackage ./. {}"
