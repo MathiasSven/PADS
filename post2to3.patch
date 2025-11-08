@@ -1,0 +1,26 @@
+diff --git a/PADS/Bicliques.py b/PADS/Bicliques.py
+index 75b673a..6f5c3d0 100644
+--- a/PADS/Bicliques.py
++++ b/PADS/Bicliques.py
+@@ -45,7 +45,7 @@ def Bicliques(G):
+                 for w in D[v]:      # try outgoing neighbors
+                     if w not in done and adjacentToAll(w,F):
+                         B[F].add(w)
+-                done.add(w)
++                    done.add(w)
+ 
+     for F in list(B):               # add backlinks from subsets to subsets
+         G = B[F] = frozenset(B[F])  # but only to the biggest ones
+diff --git a/PADS/GraphDegeneracy.py b/PADS/GraphDegeneracy.py
+index 2be84f6..c20d475 100644
+--- a/PADS/GraphDegeneracy.py
++++ b/PADS/GraphDegeneracy.py
+@@ -16,7 +16,7 @@ def degeneracySequence(G):
+     Q = BucketQueue()
+     for v in G:
+         Q[v] = len(G[v])    # prioritize vertices by degree
+-    for v,d in list(Q.items()):
++    for v,d in Q.items():
+         yield v,d           # output vertices in priority order
+         for w in G[v]:
+             if w in Q:

@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=78.0", "versioningit"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pads"
+dynamic = ["version"]
+license-files = ["LICENSE"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["PADS*"]
+
+[tool.versioningit.vcs]
+default-tag = "0.0.0"
+
+[tool.versioningit.format]
+distance = "{author_date:%Y%m%d}"
