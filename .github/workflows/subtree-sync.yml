@@ -2,7 +2,7 @@ name: "Subtree Sync"
 on:
   workflow_dispatch:
   schedule:
-    - cron:  '0 16 */1 * *'
+    - cron:  '0 16 */1 * SUN'
 
 jobs:
   sync-subtree:
